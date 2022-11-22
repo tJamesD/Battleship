@@ -9,7 +9,7 @@ public class Ship {
     int[] shipCoordinates;
     int[] shipTargetArray;
 
-    boolean shipSunk = false;
+    boolean shipSunk;
 
 
 
@@ -22,6 +22,7 @@ public class Ship {
         this.shipArray = new String[size];
         this.shipCoordinates = new int[4];
         this.shipTargetArray = new int[size];
+        this.shipSunk = false;
         fillShipArray();
         fillCoordinateArray();
 

@@ -10,6 +10,7 @@ public class Main {
     public static void main(String[] args) {
         // Write your code here
         Board board = new Board();
+        Board board2 = new Board();
         Scanner scanner = new Scanner(System.in);
         String userInput = "";
 
@@ -19,7 +20,13 @@ public class Main {
         Ship Sub = new Ship("Submarine", 3);
         Ship Cruiser = new Ship("Cruiser", 3);
         Ship Destroyer = new Ship("Destroyer", 2);
+        Ship Carrier2 = new Ship("Aircraft Carrier", 5);
+        Ship Battleship2 = new Ship("Battleship", 4);
+        Ship Sub2 = new Ship("Submarine", 3);
+        Ship Cruiser2 = new Ship("Cruiser", 3);
+        Ship Destroyer2 = new Ship("Destroyer", 2);
         ShipArmada shipArmada;
+        ShipArmada shipArmada2;
 
         int[] shipCoordinates = new int[4];
         int[] targetArray = new int[2];
@@ -32,6 +39,8 @@ public class Main {
 
         boolean shipCoordinateCheck = (shipCoordinates[0] == -1 || shipCoordinates[1] == -1 || shipCoordinates[2] == -1 || shipCoordinates[3] == -1);
 
+        System.out.println("Player 1, place your ships on the game field");
+        System.out.println();
 
         board.createBoard();
         board.printBoard();
@@ -71,15 +80,139 @@ public class Main {
         board.printBoard();
         resetShipCoordinates(shipCoordinates);
 
-        boolean shipsSunk = (Carrier.getShipSunk() || Battleship.getShipSunk() || Sub.getShipSunk() || Cruiser.getShipSunk() || Destroyer.getShipSunk());
+        shipArmada = new ShipArmada(Carrier, Battleship, Sub, Cruiser, Destroyer);
+        shipArmada.fillValidTargetArrays();
+        board.placeShipArmada(shipArmada);
 
+        System.out.println("Press Enter and pass the move to another player");
+        String pause = scanner.nextLine();
+
+        board2.createBoard();
+        board2.printBoard();
+
+        shipCoordinates = askForInput(shipCoordinates, scanner, Carrier2, shipCoordinateCheck, board2);
+        Carrier2.buildShip(shipCoordinates);
+        board2.placeShip(Carrier2);
         System.out.println();
+        board2.printBoard();
+        resetShipCoordinates(shipCoordinates);
+
+        shipCoordinates = askForInput(shipCoordinates, scanner, Battleship2, shipCoordinateCheck, board2);
+        Battleship2.buildShip(shipCoordinates);
+        board2.placeShip(Battleship2);
+        System.out.println();
+        board2.printBoard();
+        resetShipCoordinates(shipCoordinates);
+
+        shipCoordinates = askForInput(shipCoordinates, scanner, Sub2, shipCoordinateCheck, board2);
+        Sub2.buildShip(shipCoordinates);
+        board2.placeShip(Sub2);
+        System.out.println();
+        board2.printBoard();
+        resetShipCoordinates(shipCoordinates);
+
+        shipCoordinates = askForInput(shipCoordinates, scanner, Cruiser2, shipCoordinateCheck, board2);
+        Cruiser2.buildShip(shipCoordinates);
+        board2.placeShip(Cruiser2);
+        System.out.println();
+        board2.printBoard();
+        resetShipCoordinates(shipCoordinates);
+
+        shipCoordinates = askForInput(shipCoordinates, scanner, Destroyer2, shipCoordinateCheck, board2);
+        Destroyer2.buildShip(shipCoordinates);
+        board2.placeShip(Destroyer2);
+        System.out.println();
+        board2.printBoard();
+        resetShipCoordinates(shipCoordinates);
+
+        shipArmada2 = new ShipArmada(Carrier2, Battleship2, Sub2, Cruiser2, Destroyer2);
+        shipArmada2.fillValidTargetArrays();
+        board2.placeShipArmada(shipArmada2);
+
+        System.out.println("Press enter and pass the move to another player");
+        pause = scanner.nextLine();
+        //new loop
+        while(!shipArmada.allShipsSunk() && !shipArmada2.allShipsSunk() ) {
+            int currentSunkShipCountP2 = shipArmada2.getShipSunkCount();
+            board2.printFogOfWar();
+            System.out.println("---------------------");
+            board.printBoard();
+            System.out.println();
+            System.out.print("Player 1, it's your turn:");
+            targetArray = askForTarget(scanner);
+            convertedTargetArray = convertAskForTarget(targetArray);
+
+            if (shipArmada2.checkForHit(convertedTargetArray)) {
+                shipArmada2.setHit(convertedTargetArray);
+                shipArmada2.setSunkShipCount();
+                System.out.print("STOREDCURRENT " + currentSunkShipCountP2);
+                System.out.println("SHIPSUNKCOUNTP2FROMMETHOD " + shipArmada2.getShipSunkCount());
+                if(currentSunkShipCountP2<shipArmada2.getShipSunkCount()){
+                    System.out.println("You sank a ship!");
+                }
+                board2.placeShipArmada(shipArmada2);
+                System.out.println();
+                if(shipArmada2.allShipsSunk()){
+                    System.out.println("You sank the last ship. You won. Congratulations!");
+                    break;
+                }
+                System.out.println("You hit a ship!");
+                System.out.println("Press enter and pass the move to another player");
+                pause = scanner.nextLine();
+
+            } else {
+                board2.placeMiss(targetArray);
+                System.out.println("You missed!");
+                System.out.println("Press enter and pass the move to another player");
+                pause = scanner.nextLine();
+            }
+
+            board.printFogOfWar();
+            System.out.println("---------------------");
+            board2.printBoard();
+            System.out.println();
+            System.out.print("Player 2, it's your turn:");
+
+            targetArray = askForTarget(scanner);
+            convertedTargetArray = convertAskForTarget(targetArray);
+
+
+            if (shipArmada.checkForHit(convertedTargetArray)) {
+                int currentSunkShipCountP1 = shipArmada.getShipSunkCount();
+                shipArmada.setHit(convertedTargetArray);
+                shipArmada.setSunkShipCount();
+                System.out.print("STOREDCURRENT " + currentSunkShipCountP1);
+                System.out.println("SHIPSUNKCOUNTP1FROMMETHOD " + shipArmada.getShipSunkCount());
+                if(currentSunkShipCountP1<shipArmada.getShipSunkCount()){
+                    System.out.println("You sank a ship!");
+                }
+
+                board.placeShipArmada(shipArmada);
+                System.out.println();
+                if(shipArmada.allShipsSunk()){
+                    System.out.println("You sank the last ship. You won. Congratulations!");
+                    break;
+                }
+                System.out.println("You hit a ship!");
+                System.out.println("Press enter and pass the move to another player");
+                pause = scanner.nextLine();
+
+            } else {
+                board.placeMiss(targetArray);
+                System.out.println("You missed!");
+                System.out.println("Press enter and pass the move to another player");
+                pause = scanner.nextLine();
+            }
+
+        }
+
+
         System.out.println("The game starts!");
         System.out.println();
         board.printFogOfWar();
 
-        shipArmada = new ShipArmada(Carrier, Battleship, Sub, Cruiser, Destroyer);
-        shipArmada.fillValidTargetArrays();
+        //shipArmada = new ShipArmada(Carrier, Battleship, Sub, Cruiser, Destroyer);
+        //shipArmada.fillValidTargetArrays();
 /*
         System.out.println();
         System.out.println("Take a shot!");
@@ -87,6 +220,8 @@ public class Main {
         String target = scanner.nextLine();
         askForTargetStringInput(target,scanner);
 */
+        //old loop
+        /*
         boolean firstShot = true;
         while (!shipArmada.allShipsSunk()) {
             if(firstShot) {
@@ -94,16 +229,9 @@ public class Main {
                 System.out.println("Take a shot!");
                 firstShot = false;
             }
-            //System.out.println();
             targetArray = askForTarget(scanner);
-/*
-            for (int i = 0;i<targetArray.length;i++) {
-                System.out.println(targetArray[i]);
-            }
-*/
-            convertedTargetArray = convertAskForTarget(targetArray);
 
-           // System.out.println(convertedTargetArray);
+            convertedTargetArray = convertAskForTarget(targetArray);
 
             if (shipArmada.checkForHit(convertedTargetArray)) {
                 //System.out.println("WE ARE HRE!");
@@ -124,11 +252,10 @@ public class Main {
                 System.out.println("You missed! Try again:");
             }
 
-            //board.printBoard();
-            //System.out.println();
-            //board.placeShipArmada(shipArmada);
-            //board.printBoard();
         }
+
+         */
+
     }
 
     public static int[] askForInput(int[] shipCoordinates, Scanner scanner, Ship ship, Boolean shipCoordinateCheck, Board board) {
@@ -202,28 +329,34 @@ public class Main {
     }
 
     public static int[] convertCoordinatesToNumbers(int[] shipCoordinates, String input) {
-        String[] splitString = splitInput(input);
-        shipCoordinates[0] = convertLetter(splitString[0]);
-        shipCoordinates[2] = convertLetter(splitString[1]);
-        shipCoordinates[1] = getCoordinateNumber(splitString[0]);
-        shipCoordinates[3] = getCoordinateNumber(splitString[1]);
 
-        //swaps coordintes if value is of cordinate is larger smaller
-        if (shipCoordinates[0] > shipCoordinates[2]) {
-            int tempHold = shipCoordinates[2];
-            shipCoordinates[2] = shipCoordinates[0];
-            shipCoordinates[0] = tempHold;
-        }
-        if (shipCoordinates[1] > shipCoordinates[3]) {
-            int tempHold = shipCoordinates[3];
-            shipCoordinates[3] = shipCoordinates[1];
-            shipCoordinates[1] = tempHold;
-        }
+        try {
 
-        if (shipCoordinates[0] == -1 || shipCoordinates[1] == -1 || shipCoordinates[2] == -1 || shipCoordinates[3] == -1) {
-            System.out.println();
-            System.out.println("Error! Please enter coordinate sin a valid format!");
-            System.out.println();
+            String[] splitString = splitInput(input);
+            shipCoordinates[0] = convertLetter(splitString[0]);
+            shipCoordinates[2] = convertLetter(splitString[1]);
+            shipCoordinates[1] = getCoordinateNumber(splitString[0]);
+            shipCoordinates[3] = getCoordinateNumber(splitString[1]);
+
+            //swaps coordintes if value is of cordinate is larger smaller
+            if (shipCoordinates[0] > shipCoordinates[2]) {
+                int tempHold = shipCoordinates[2];
+                shipCoordinates[2] = shipCoordinates[0];
+                shipCoordinates[0] = tempHold;
+            }
+            if (shipCoordinates[1] > shipCoordinates[3]) {
+                int tempHold = shipCoordinates[3];
+                shipCoordinates[3] = shipCoordinates[1];
+                shipCoordinates[1] = tempHold;
+            }
+
+            if (shipCoordinates[0] == -1 || shipCoordinates[1] == -1 || shipCoordinates[2] == -1 || shipCoordinates[3] == -1) {
+                System.out.println();
+                System.out.println("Error! Please enter coordinate sin a valid format!");
+                System.out.println();
+            }
+        } catch(Exception e) {
+            System.out.println("Error! Enter correct input1");
         }
 
 
@@ -259,44 +392,48 @@ public class Main {
         input = input.toUpperCase();
         int rowIndex = -1;
 
+        try {
+            String c1 = input.substring(0, 2);
+            char rowChar = c1.charAt(0);
 
-        String c1 = input.substring(0, 2);
-        char rowChar = c1.charAt(0);
+            switch (rowChar) {
+                case 'A':
+                    rowIndex = 1;
+                    break;
+                case 'B':
+                    rowIndex = 2;
+                    break;
+                case 'C':
+                    rowIndex = 3;
+                    break;
+                case 'D':
+                    rowIndex = 4;
+                    break;
+                case 'E':
+                    rowIndex = 5;
+                    break;
+                case 'F':
+                    rowIndex = 6;
+                    break;
+                case 'G':
+                    rowIndex = 7;
+                    break;
+                case 'H':
+                    rowIndex = 8;
+                    break;
+                case 'I':
+                    rowIndex = 9;
+                    break;
 
-        switch (rowChar) {
-            case 'A':
-                rowIndex = 1;
-                break;
-            case 'B':
-                rowIndex = 2;
-                break;
-            case 'C':
-                rowIndex = 3;
-                break;
-            case 'D':
-                rowIndex = 4;
-                break;
-            case 'E':
-                rowIndex = 5;
-                break;
-            case 'F':
-                rowIndex = 6;
-                break;
-            case 'G':
-                rowIndex = 7;
-                break;
-            case 'H':
-                rowIndex = 8;
-                break;
-            case 'I':
-                rowIndex = 9;
-                break;
-
-            case 'J':
-                rowIndex = 10;
-                break;
+                case 'J':
+                    rowIndex = 10;
+                    break;
 
 
+            }
+        }catch(Exception e) {
+            System.out.println("Error! Enter input!");
+            return -1;
         }
         return rowIndex;
     }

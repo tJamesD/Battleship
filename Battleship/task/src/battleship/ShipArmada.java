@@ -11,6 +11,8 @@ public class ShipArmada {
     Ship Destroyer;
     Boolean newlySunk;
 
+    int shipSunkCount;
+
     ArrayList<Ship> shipArmadaList;
 
     public ShipArmada(Ship Carrier, Ship Battleship, Ship Submarine, Ship Cruiser, Ship Destroyer) {
@@ -19,6 +21,7 @@ public class ShipArmada {
         this.Submarine = Submarine;
         this.Cruiser = Cruiser;
         this.Destroyer = Destroyer;
+        this.shipSunkCount = 0;
         this.newlySunk = false;
 
         shipArmadaList = new ArrayList<>();
@@ -102,6 +105,23 @@ public class ShipArmada {
             }
             System.out.println();
         }
+    }
+
+    public void setSunkShipCount() {
+
+        int currentShipSunkCount = 0;
+
+        for (Ship ship : shipArmadaList) {
+            if(ship.getShipSunk() == true) {
+                currentShipSunkCount++;
+            }
+        }
+
+        this.shipSunkCount = currentShipSunkCount;
+    }
+
+    public int getShipSunkCount() {
+        return this.shipSunkCount;
     }
 
 
