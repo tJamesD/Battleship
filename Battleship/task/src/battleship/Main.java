@@ -145,10 +145,13 @@ public class Main {
             if (shipArmada2.checkForHit(convertedTargetArray)) {
                 shipArmada2.setHit(convertedTargetArray);
                 shipArmada2.setSunkShipCount();
-                System.out.print("STOREDCURRENT " + currentSunkShipCountP2);
-                System.out.println("SHIPSUNKCOUNTP2FROMMETHOD " + shipArmada2.getShipSunkCount());
+                //System.out.print("STOREDCURRENT " + currentSunkShipCountP2);
+                //System.out.println("SHIPSUNKCOUNTP2FROMMETHOD " + shipArmada2.getShipSunkCount());
                 if(currentSunkShipCountP2<shipArmada2.getShipSunkCount()){
                     System.out.println("You sank a ship!");
+                }
+                else {
+                    System.out.println("You hit a ship!");
                 }
                 board2.placeShipArmada(shipArmada2);
                 System.out.println();
@@ -156,7 +159,7 @@ public class Main {
                     System.out.println("You sank the last ship. You won. Congratulations!");
                     break;
                 }
-                System.out.println("You hit a ship!");
+
                 System.out.println("Press enter and pass the move to another player");
                 pause = scanner.nextLine();
 
@@ -181,10 +184,13 @@ public class Main {
                 int currentSunkShipCountP1 = shipArmada.getShipSunkCount();
                 shipArmada.setHit(convertedTargetArray);
                 shipArmada.setSunkShipCount();
-                System.out.print("STOREDCURRENT " + currentSunkShipCountP1);
-                System.out.println("SHIPSUNKCOUNTP1FROMMETHOD " + shipArmada.getShipSunkCount());
+                //System.out.print("STOREDCURRENT " + currentSunkShipCountP1);
+                //System.out.println("SHIPSUNKCOUNTP1FROMMETHOD " + shipArmada.getShipSunkCount());
                 if(currentSunkShipCountP1<shipArmada.getShipSunkCount()){
                     System.out.println("You sank a ship!");
+                }
+                else {
+                    System.out.println("You hit a ship!");
                 }
 
                 board.placeShipArmada(shipArmada);
@@ -193,7 +199,6 @@ public class Main {
                     System.out.println("You sank the last ship. You won. Congratulations!");
                     break;
                 }
-                System.out.println("You hit a ship!");
                 System.out.println("Press enter and pass the move to another player");
                 pause = scanner.nextLine();
 

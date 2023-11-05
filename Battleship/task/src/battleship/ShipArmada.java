@@ -112,7 +112,8 @@ public class ShipArmada {
         int currentShipSunkCount = 0;
 
         for (Ship ship : shipArmadaList) {
-            if(ship.getShipSunk() == true) {
+            //System.out.println("SHIPSUNKCHECKSHIPARMADA " + ship.checkShipSunk());
+            if(ship.checkShipSunk() == true) {
                 currentShipSunkCount++;
             }
         }
